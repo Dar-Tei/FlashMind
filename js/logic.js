@@ -51,6 +51,22 @@ export class FlashMindLogic {
         };
         return this.editingSet;
     }
+    // Create new set with pre-filled cards
+    createNewSetWithCards(name, cards) {
+        const newSet = {
+            id: Date.now(),
+            name: name,
+            cards: cards.map((card, index) => ({
+                id: Date.now() + index,
+                question: card.question.trim(),
+                answer: card.answer.trim()
+            })),
+            lastScore: null
+        };
+
+        this.sets.push(newSet);
+        return newSet;
+    }
 
     // Edit set
     editSet(id) {
