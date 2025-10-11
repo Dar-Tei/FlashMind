@@ -19,118 +19,133 @@ export class UIRenderer {
     // Render home page
     renderHome(sets) {
         const setsHTML = sets.map(set => `
-            <div class="card">
-                <div class="card-header">
-                    <div style="flex: 1;">
-                        <h3 class="card-title">${set.name}</h3>
-                        <p class="card-subtitle">${set.cards.length} карток</p>
-                        ${set.lastScore !== null ? `
-                            <p class="card-score ${set.lastScore >= 70 ? 'improvement-positive' : set.lastScore >= 40 ? 'improvement-negative' : 'improvement-negative'}" style="margin-top: 0.25rem;">
-                                Останній результат: ${set.lastScore}%
-                            </p>
-                        ` : ''}
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn-icon blue" data-action="export" data-id="${set.id}">
-                            ${icons.upload}
-                        </button>
-                        <button class="btn-icon blue" data-action="edit" data-id="${set.id}">
-                            ${icons.edit}
-                        </button>
-                        <button class="btn-icon red" data-action="delete" data-id="${set.id}">
-                            ${icons.trash}
-                        </button>
-                    </div>
-                </div>
-                <button class="btn btn-gradient" style="width: 100%;" data-action="play" data-id="${set.id}">
-                    ${icons.play}
-                    Почати гру
-                </button>
-            </div>
-        `).join('');
-
-        this.appElement.innerHTML = `
-            <div class="gradient-bg-purple" style="min-height: 100vh; padding: 1.5rem;">
-                <div class="container">
-                    <div class="header">
-                        <h1 class="title">FlashMind</h1>
-                        <p class="subtitle">Навчайся з картками легко та ефективно</p>
-                    </div>
-
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                        <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="create">
-                            ${icons.plus}
-                            Створити новий набір
-                        </button>
-                        <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="import">
-                            ${icons.download}
-                            Імпортувати у форматі json
-                        </button>
-                    </div>
-
-                    <div>
-                        ${setsHTML}
-                    </div>
-
-                    ${sets.length === 0 ? `
-                        <div class="empty-state">
-                            <p style="font-size: 1.25rem;">Немає наборів карток</p>
-                            <p style="opacity: 0.8; margin-top: 0.5rem;">Створіть перший набір, щоб почати!</p>
-                        </div>
+        <div class="card">
+            <div class="card-header">
+                <div style="flex: 1;">
+                    <h3 class="card-title">${set.name}</h3>
+                    <p class="card-subtitle">${set.cards.length} карток</p>
+                    ${set.lastScore !== null ? `
+                        <p class="card-score ${set.lastScore >= 70 ? 'improvement-positive' : set.lastScore >= 40 ? 'improvement-negative' : 'improvement-negative'}" style="margin-top: 0.25rem;">
+                            Останній результат: ${set.lastScore}%
+                        </p>
                     ` : ''}
                 </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-icon blue" data-action="export" data-id="${set.id}">
+                        ${icons.upload}
+                    </button>
+                    <button class="btn-icon blue" data-action="edit" data-id="${set.id}">
+                        ${icons.edit}
+                    </button>
+                    <button class="btn-icon red" data-action="delete" data-id="${set.id}">
+                        ${icons.trash}
+                    </button>
+                </div>
             </div>
-        `;
+            <button class="btn btn-gradient" style="width: 100%;" data-action="play" data-id="${set.id}">
+                ${icons.play}
+                Почати гру
+            </button>
+        </div>
+    `).join('');
+
+        this.appElement.innerHTML = `
+        <div class="gradient-bg-purple" style="min-height: 100vh;">
+            <div class="container">
+                <div class="header">
+                    <h1 class="title">FlashMind</h1>
+                    <p class="subtitle">Навчайся з картками легко та ефективно</p>
+                </div>
+
+                <div class="desktop-action-buttons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="create">
+                        ${icons.plus}
+                        Створити новий набір
+                    </button>
+                    <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="import">
+                        ${icons.download}
+                        Імпортувати у форматі json
+                    </button>
+                </div>
+
+                <div>
+                    ${setsHTML}
+                </div>
+
+                ${sets.length === 0 ? `
+                    <div class="empty-state">
+                        <p style="font-size: 1.25rem;">Немає наборів карток</p>
+                        <p style="opacity: 0.8; margin-top: 0.5rem;">Створіть перший набір, щоб почати!</p>
+                    </div>
+                ` : ''}
+            </div>
+
+            <div class="mobile-action-buttons">
+                <button class="btn btn-primary" data-action="create">
+                    ${icons.plus}
+                </button>
+                <button class="btn btn-primary" data-action="import">
+                    ${icons.download}
+                </button>
+            </div>
+        </div>
+    `;
     }
 
     // Render edit page
     renderEdit(editingSet) {
         const cardsHTML = editingSet.cards.map((card, index) => `
-            <div class="card-edit-item">
-                <div class="card-edit-header">
-                    <span class="card-edit-title">Картка ${index + 1}</span>
-                    ${editingSet.cards.length > 1 ? `
-                        <button class="btn-icon red" data-action="delete-card" data-id="${card.id}">
-                            ${icons.trash}
-                        </button>
-                    ` : ''}
-                </div>
-                <input type="text" class="input" placeholder="Запитання" value="${card.question}" data-card-id="${card.id}" data-field="question" style="margin-bottom: 0.5rem;">
-                <input type="text" class="input" placeholder="Відповідь" value="${card.answer}" data-card-id="${card.id}" data-field="answer">
+        <div class="card-edit-item">
+            <div class="card-edit-header">
+                <span class="card-edit-title">Картка ${index + 1}</span>
+                ${editingSet.cards.length > 1 ? `
+                    <button class="btn-icon red" data-action="delete-card" data-id="${card.id}">
+                        ${icons.trash}
+                    </button>
+                ` : ''}
             </div>
-        `).join('');
+            <input type="text" class="input" placeholder="Запитання" value="${card.question}" data-card-id="${card.id}" data-field="question" style="margin-bottom: 0.5rem;">
+            <input type="text" class="input" placeholder="Відповідь" value="${card.answer}" data-card-id="${card.id}" data-field="answer">
+        </div>
+    `).join('');
 
         this.appElement.innerHTML = `
-            <div class="gradient-bg-blue" style="min-height: 100vh; padding: 1.5rem;">
-                <div class="container container-small">
-                    <button class="back-btn" data-action="back">
-                        ${icons.arrowLeft}
-                        Назад
+        <div class="gradient-bg-blue" style="min-height: 100vh;">
+            <div class="container container-small">
+                <button class="back-btn" data-action="back">
+                    ${icons.arrowLeft}
+                    Назад
+                </button>
+
+                <div class="card">
+                    <h2 class="card-title" style="margin-bottom: 1rem;">
+                        ${editingSet.id ? 'Редагувати набір' : 'Новий набір'}
+                    </h2>
+
+                    <input type="text" class="input input-lg" placeholder="Назва набору" value="${editingSet.name}" data-field="set-name" style="margin-bottom: 1rem;">
+
+                    <div>
+                        ${cardsHTML}
+                    </div>
+
+                    <button class="add-card-btn" data-action="add-card">
+                        ${icons.plus}
+                        Додати картку
                     </button>
 
-                    <div class="card">
-                        <h2 class="card-title" style="margin-bottom: 1rem;">
-                            ${editingSet.id ? 'Редагувати набір' : 'Новий набір'}
-                        </h2>
-
-                        <input type="text" class="input input-lg" placeholder="Назва набору" value="${editingSet.name}" data-field="set-name" style="margin-bottom: 1rem;">
-
-                        <div>
-                            ${cardsHTML}
-                        </div>
-
-                        <button class="add-card-btn" data-action="add-card">
-                            ${icons.plus}
-                            Додати картку
-                        </button>
-
-                        <button class="btn btn-gradient" style="width: 100%; margin-top: 1.5rem;" data-action="save">
-                            Зберегти набір
-                        </button>
-                    </div>
+                    <button class="btn btn-gradient edit-save-desktop" style="width: 100%; margin-top: 1.5rem;" data-action="save">
+                        Зберегти набір
+                    </button>
                 </div>
             </div>
-        `;
+
+            <div class="edit-save-mobile">
+                <button class="btn btn-gradient" style="width: 100%;" data-action="save">
+                    Зберегти набір
+                </button>
+            </div>
+        </div>
+    `;
     }
 
     // Render game
@@ -143,14 +158,15 @@ export class UIRenderer {
         const progress = ((gameState.currentIndex + 1) / gameState.cards.length) * 100;
 
         this.appElement.innerHTML = `
-            <div class="gradient-bg-indigo" style="min-height: 100vh; padding: 1.5rem; display: flex; align-items: center; justify-content: center;">
-                <div style="max-width: 672px; width: 100%;">
+        <div class="gradient-bg-indigo" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+            <div style="max-width: 672px; width: 100%;">
+                <div class="game-header-mobile">
                     <div class="game-nav">
                         <button class="back-btn" data-action="exit" style="margin-bottom: 0;">
                             ${icons.arrowLeft}
                             Вихід
                         </button>
-                        <span style="font-weight: 600;">
+                        <span style="font-weight: 600; color: white;">
                             ${gameState.currentIndex + 1} / ${gameState.cards.length}
                         </span>
                     </div>
@@ -158,36 +174,43 @@ export class UIRenderer {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%"></div>
                     </div>
+                </div>
 
-                    <div class="game-card">
-                        <div style="text-align: center; margin-bottom: 2rem; flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            ${!gameState.showAnswer ? `
-                                <p class="game-question-label">Запитання</p>
-                                <p class="game-question">${currentCard.question}</p>
-                            ` : `
-                                <p class="game-question-label">Відповідь</p>
-                                <p class="game-answer">${currentCard.answer}</p>
-                            `}
-                        </div>
-
-                        ${!gameState.showAnswer ? `
-                            <div class="flex-row" style="width: 100%;">
-                                <button class="btn btn-green flex-1" data-action="know">
-                                    ✓ Знаю
-                                </button>
-                                <button class="btn btn-red flex-1" data-action="dont-know">
-                                    ✗ Не знаю
-                                </button>
+                <div class="game-content-mobile">
+                    <div style="width: 100%;">
+                        <div class="game-card">
+                            <div style="text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                ${!gameState.showAnswer ? `
+                                    <p class="game-question-label">ЗАПИТАННЯ</p>
+                                    <p class="game-question">${currentCard.question}</p>
+                                ` : `
+                                    <p class="game-question-label">ВІДПОВІДЬ</p>
+                                    <p class="game-answer">${currentCard.answer}</p>
+                                `}
                             </div>
-                        ` : `
-                            <button class="btn btn-gradient" style="width: 100%; font-size: 1.25rem; padding: 1.25rem;" data-action="next">
-                                Далі →
-                            </button>
-                        `}
+                        </div>
                     </div>
                 </div>
+
+                <div class="game-actions-mobile">
+                    ${!gameState.showAnswer ? `
+                        <div class="flex-row" style="width: 100%;">
+                            <button class="btn btn-green flex-1" data-action="know">
+                                ✓ Знаю
+                            </button>
+                            <button class="btn btn-red flex-1" data-action="dont-know">
+                                ✗ Не знаю
+                            </button>
+                        </div>
+                    ` : `
+                        <button class="btn btn-gradient" style="width: 100%; font-size: 1.25rem; padding: 1.25rem;" data-action="next">
+                            Далі →
+                        </button>
+                    `}
+                </div>
             </div>
-        `;
+        </div>
+    `;
     }
 
     // Render game finished
@@ -197,38 +220,56 @@ export class UIRenderer {
         const improvement = previousScore !== null ? currentScore - previousScore : null;
 
         this.appElement.innerHTML = `
-            <div class="gradient-bg-green" style="min-height: 100vh; padding: 1.5rem; display: flex; align-items: center; justify-content: center;">
-                <div style="max-width: 672px; width: 100%;" class="card" style="padding: 2rem;">
-                    <h2 style="font-size: 1.875rem; font-weight: bold; text-align: center; color: #1f2937; margin-bottom: 1.5rem;">Гра завершена!</h2>
+        <div class="gradient-bg-green" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+            <div style="max-width: 672px; width: 100%;">
+                <div class="result-content-mobile">
+                    <div style="width: 100%;">
+                        <div class="card result-card-mobile" style="padding: 2rem;">
+                            <h2 style="font-size: 1.875rem; font-weight: bold; text-align: center; color: #1f2937; margin-bottom: 1.5rem;">Гра завершена!</h2>
 
-                    <div style="text-align: center; margin-bottom: 1.5rem;">
-                        <p class="result-score">${currentScore}%</p>
-                        <p style="color: #6b7280; font-size: 1.125rem;">
-                            Правильно: ${gameState.correctCount} з ${gameState.cards.length}
-                        </p>
-                    </div>
+                            <div style="text-align: center; margin-bottom: 1.5rem;">
+                                <p class="result-score">${currentScore}%</p>
+                                <p style="color: #6b7280; font-size: 1.125rem;">
+                                    Правильно: ${gameState.correctCount} з ${gameState.cards.length}
+                                </p>
+                            </div>
 
-                    <div class="result-bar">
-                        <div class="result-bar-fill" style="width: ${currentScore}%"></div>
-                    </div>
+                            <div class="result-bar">
+                                <div class="result-bar-fill" style="width: ${currentScore}%"></div>
+                            </div>
 
-                    ${improvement !== null ? `
-                        <div class="improvement">
-                            <p style="font-size: 1.125rem; color: #374151;">
-                                ${improvement > 0 ? `
-                                    <span class="improvement-positive">↑ Покращення на ${improvement}%</span>
-                                ` : improvement < 0 ? `
-                                    <span class="improvement-negative">↓ Зниження на ${Math.abs(improvement)}%</span>
-                                ` : `
-                                    <span class="improvement-same">= Той самий результат</span>
-                                `}
-                            </p>
-                            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
-                                Попередній результат: ${previousScore}%
-                            </p>
+                            ${improvement !== null ? `
+                                <div class="improvement">
+                                    <p style="font-size: 1.125rem; color: #374151;">
+                                        ${improvement > 0 ? `
+                                            <span class="improvement-positive">↑ Покращення на ${improvement}%</span>
+                                        ` : improvement < 0 ? `
+                                            <span class="improvement-negative">↓ Зниження на ${Math.abs(improvement)}%</span>
+                                        ` : `
+                                            <span class="improvement-same">= Той самий результат</span>
+                                        `}
+                                    </p>
+                                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
+                                        Попередній результат: ${previousScore}%
+                                    </p>
+                                </div>
+                            ` : ''}
                         </div>
-                    ` : ''}
 
+                        <div class="flex-row result-actions-desktop" style="margin-top: 1.5rem;">
+                            <button class="btn btn-gradient flex-1" data-action="restart">
+                                ${icons.rotateCw}
+                                Грати знову
+                            </button>
+                            <button class="btn btn-secondary flex-1" data-action="exit">
+                                ${icons.arrowLeft}
+                                На головну
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-actions-mobile">
                     <div class="flex-row">
                         <button class="btn btn-gradient flex-1" data-action="restart">
                             ${icons.rotateCw}
@@ -241,6 +282,7 @@ export class UIRenderer {
                     </div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
     }
 }
