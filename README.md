@@ -36,7 +36,7 @@ npx http-server . -p 8080
 > **Note:** Opening files directly with `file://` may cause ES module import errors.  
 > Use a local HTTP server instead.
 
-##File Structure:
+## File Structure:
 
 ```
 / (project root)
@@ -52,7 +52,7 @@ npx http-server . -p 8080
 └─ README.md
 ```
 
-##Data Format (Import / Export)
+## Data Format (Import / Export)
 Example JSON structure:
 ```
 {
@@ -67,14 +67,14 @@ Example JSON structure:
 - Each file must contain a `name` field and a `cards` array  
 - Only cards with non-empty `question` and `answer` are accepted
 
-##Behavior and Persistence
+## Behavior and Persistence
 - Flashcard sets are stored under the key flashmind_sets in localStorage
 - Score data is stored in lastScore (integer, percentage)
 - IDs are generated using Date.now() with offsets
 
 >Note: Timestamp-based IDs are simple but not collision-proof under very rapid operations.
 
-##Deployment to GitHub PagesDeployment to GitHub Pages
+## Deployment to GitHub PagesDeployment to GitHub Pages
 - Push the repository to GitHub
 - In repository settings, enable **GitHub Pages**
   - Source: `main` branch (or `gh-pages`)
@@ -82,7 +82,7 @@ Example JSON structure:
 - Verify that `index.html` is in the repository root
 - If routing is added later, configure a 404 fallback
 
-##Development Notes and Future Roadmap
+## Development Notes and Future Roadmap
 - Replace timestamp-based IDs with UUIDs
 - Add automated unit tests for logic.js and storage.js
 - Implement spaced repetition (e.g., SM-2 algorithm)
@@ -92,7 +92,7 @@ Example JSON structure:
 - Integrate linting and CI/CD via GitHub Actions
 - Enhance accessibility (keyboard navigation, ARIA, contrast mode)
 
-##Security and Privacy
+## Security and Privacy
 - All data is stored locally in the browser
 - No external servers or APIs are used
 - Avoid storing sensitive personal information
@@ -107,13 +107,13 @@ Troubleshooting
 | Changes not saved | Browser storage full or blocked | Clear local data or adjust privacy settings |
 | ES module import error | Files opened directly | Use local HTTP server instead |
 
-##Contribution
+## Contribution
 - Fork the repository
 - Create a feature branch
 - Implement and test your changes
 - Submit a pull request with a detailed description
 
-##Contact and Acknowledgements
+## Contact and Acknowledgements
 - Report issues via the GitHub issue tracker
 - Mention contributors and third-party assets (if any)
 
