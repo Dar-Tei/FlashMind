@@ -3,15 +3,19 @@
 import { StorageManager } from './storage.js';
 import { FlashMindLogic } from './logic.js';
 import { UIRenderer } from './ui.js';
+import { ModalManager } from './modal.js';
+import { AIGenerator } from './ai.js';
 
 class FlashMind {
     constructor() {
         this.storage = new StorageManager('flashmind_sets');
         this.logic = new FlashMindLogic();
         this.ui = new UIRenderer();
-        
+        this.modal = new ModalManager();
+        this.ai = new AIGenerator();
+
         this.currentView = 'home'; // home, edit, game
-        
+
         this.init();
     }
 
@@ -74,6 +78,9 @@ class FlashMind {
             case 'create':
                 this.createNewSet();
                 break;
+            case 'generate':
+                this.showGenerateModal();
+                break;
             case 'edit':
                 this.editSet(parseInt(id));
                 break;
@@ -126,37 +133,192 @@ class FlashMind {
         this.render();
     }
 
+    async showGenerateModal() {
+        // Show generate modal
+        const modalHTML = this.ui.renderGenerateModal();
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        const modal = document.getElementById('generate-modal');
+        const topicInput = document.getElementById('generate-topic');
+        const countSelect = document.getElementById('generate-count');
+        const levelSelect = document.getElementById('generate-level');
+        const questionLangSelect = document.getElementById('generate-question-lang');
+        const answerLangSelect = document.getElementById('generate-answer-lang');
+        const apiKeyInput = document.getElementById('generate-api-key');
+        const cancelBtn = document.getElementById('generate-cancel');
+        const submitBtn = document.getElementById('generate-submit');
+
+        // Cancel button
+        cancelBtn.addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // Close on overlay click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on ESC
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+
+        // Submit button
+        submitBtn.addEventListener('click', async () => {
+            const topic = topicInput.value.trim();
+            const count = parseInt(countSelect.value);
+            const level = levelSelect.value;
+            const questionLang = questionLangSelect.value;
+            const answerLang = answerLangSelect.value;
+
+            // Validation
+            if (!topic) {
+                await this.modal.alert({
+                    title: 'Помилка',
+                    message: 'Будь ласка, введіть тему для генерації карток',
+                    type: 'error'
+                });
+                return;
+            }
+
+
+            // Close modal
+            modal.remove();
+
+            // Generate cards
+            await this.generateCardsWithAI({
+                topic,
+                count,
+                level,
+                questionLang,
+                answerLang               
+            });
+        });
+
+        // Focus on topic input
+        topicInput.focus();
+    }
+
+    async generateCardsWithAI(options) {
+        const { topic, count, level, questionLang, answerLang } = options;
+
+        // Show loading
+        this.ui.renderLoadingModal(`Генерую ${count} карток на тему "${topic}"...`);
+
+        try {         
+
+            // Generate cards
+            const result = await this.ai.generateCards({
+                topic,
+                count,
+                level,
+                questionLang,
+                answerLang
+            });
+
+            // Remove loading
+            this.ui.removeLoadingModal();
+
+            if (result.success) {
+                // Create new set with generated cards
+                const newSet = this.logic.createNewSetWithCards(topic, result.cards);
+                this.storage.save(this.logic.getAllSets());
+
+                await this.modal.alert({
+                    title: 'Успіх!',
+                    message: `Згенеровано ${result.cards.length} карток на тему "${topic}"`,
+                    type: 'success'
+                });
+
+                this.render();
+            } else {
+                await this.modal.alert({
+                    title: 'Помилка генерації',
+                    message: result.error || 'Не вдалося згенерувати картки',
+                    type: 'error'
+                });
+            }
+        } catch (error) {
+            this.ui.removeLoadingModal();
+
+            let errorMessage = 'Не вдалося згенерувати картки. ';
+
+            if (error.message.includes('API key')) {
+                errorMessage += 'Перевірте правильність API ключа.';
+            } else if (error.message.includes('quota')) {
+                errorMessage += 'Перевищено ліміт запитів. Спробуйте пізніше.';
+            } else {
+                errorMessage += error.message || 'Невідома помилка.';
+            }
+
+            await this.modal.alert({
+                title: 'Помилка',
+                message: errorMessage,
+                type: 'error'
+            });
+        }
+    }
+
     editSet(id) {
         this.logic.editSet(id);
         this.currentView = 'edit';
         this.render();
     }
 
-    deleteSet(id) {
-        if (confirm('Ви впевнені, що хочете видалити цей набір?')) {
+    async deleteSet(id) {
+        const confirmed = await this.modal.confirm({
+            title: 'Видалення набору',
+            message: 'Ви впевнені, що хочете видалити цей набір? Цю дію не можна скасувати.',
+            confirmText: 'Видалити',
+            cancelText: 'Скасувати',
+            type: 'warning'
+        });
+
+        if (confirmed) {
             this.logic.deleteSet(id);
             this.storage.save(this.logic.getAllSets());
             this.render();
         }
     }
 
-    exportSet(id) {
+    async exportSet(id) {
         const set = this.logic.getSetById(id);
         if (!set) return;
 
         const fileName = set.name.replace(/[^a-zA-Zа-яА-ЯіІїЇєЄ0-9]/g, '_');
         this.storage.exportToFile(set, fileName);
+
+        await this.modal.alert({
+            title: 'Експорт завершено',
+            message: `Набір "${set.name}" успішно експортовано!`,
+            type: 'success'
+        });
     }
 
-    importSet() {
-        this.storage.importFromFile((result) => {
+    async importSet() {
+        this.storage.importFromFile(async (result) => {
             if (result.success) {
                 const addResult = this.logic.addImportedSet(result.data);
                 this.storage.save(addResult.sets);
                 this.render();
-                alert(`Набір "${addResult.set.name}" успішно імпортовано!`);
+
+                await this.modal.alert({
+                    title: 'Успішний імпорт',
+                    message: `Набір "${addResult.set.name}" успішно імпортовано!`,
+                    type: 'success'
+                });
             } else {
-                alert(result.error);
+                await this.modal.alert({
+                    title: 'Помилка імпорту',
+                    message: result.error,
+                    type: 'error'
+                });
             }
         });
     }
@@ -178,15 +340,19 @@ class FlashMind {
         this.render();
     }
 
-    saveSet() {
+    async saveSet() {
         const result = this.logic.saveSet();
-        
+
         if (result.success) {
             this.storage.save(result.sets);
             this.currentView = 'home';
             this.render();
         } else {
-            alert(result.error);
+            await this.modal.alert({
+                title: 'Помилка збереження',
+                message: result.error,
+                type: 'error'
+            });
         }
     }
 
@@ -199,12 +365,12 @@ class FlashMind {
 
     handleKnow() {
         const result = this.logic.handleKnow();
-        
+
         if (result && result.sets) {
             // Game finished
             this.storage.save(result.sets);
         }
-        
+
         this.render();
     }
 
@@ -215,12 +381,12 @@ class FlashMind {
 
     handleNext() {
         const result = this.logic.handleNext();
-        
+
         if (result && result.sets) {
             // Game finished
             this.storage.save(result.sets);
         }
-        
+
         this.render();
     }
 
@@ -231,12 +397,12 @@ class FlashMind {
 
     exitGame() {
         const result = this.logic.exitGame();
-        
+
         // Save results only if game was completed naturally
         if (result && result.shouldSave) {
             this.storage.save(this.logic.getAllSets());
         }
-        
+
         this.currentView = 'home';
         this.render();
     }
