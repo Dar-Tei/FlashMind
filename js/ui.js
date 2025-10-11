@@ -323,10 +323,10 @@ export class UIRenderer {
                             Кількість карток
                         </label>
                         <select id="generate-count" class="input" style="margin-bottom: 0;">
-                            <option value="5">5 карток</option>
-                            <option value="10" selected>10 карток</option>
-                            <option value="15">15 карток</option>
-                            <option value="20">20 карток</option>
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
                         </select>
                     </div>
 
@@ -411,4 +411,5 @@ export class UIRenderer {
         if (modal) modal.remove();
     }
 }
+
 
