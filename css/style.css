@@ -380,3 +380,194 @@ body {
    width: 24px;
    height: 24px;
 }
+
+/* Замінити медіа-запит в кінці style.css */
+
+@media (max-width: 640px) {
+   .container {
+      padding: 1rem;
+      padding-bottom: 6rem;
+   }
+
+   .container-small {
+      padding-bottom: 6rem;
+   }
+
+   .title {
+      font-size: 2rem;
+   }
+
+   .subtitle {
+      font-size: 1rem;
+   }
+
+   .game-question {
+      font-size: 1.5rem;
+   }
+
+   .game-answer {
+      font-size: 1.5rem;
+   }
+
+   .result-score {
+      font-size: 2.5rem;
+   }
+
+   .btn-text-mobile {
+      display: none;
+   }
+
+   .card {
+      padding: 1rem;
+   }
+
+   .game-card {
+      padding: 1.5rem;
+      min-height: 280px;
+   }
+
+   .mobile-action-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 50;
+   }
+
+   .mobile-action-buttons .btn {
+      flex: 1;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+   }
+
+   .desktop-action-buttons {
+      display: none !important;
+   }
+
+   .game-header-mobile {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      z-index: 50;
+   }
+   .game-question {
+      font-size: 2.25rem;
+   }
+   .game-content-mobile {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+
+   .game-actions-mobile {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      z-index: 50;
+   }
+
+   .game-actions-mobile .flex-row {
+      gap: 0.5rem;
+   }
+
+   .result-content-mobile {
+      padding-top: 2rem;
+      padding-bottom: 6rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+   .result-score {
+      font-size: 3.75rem;
+   }
+
+   .result-actions-mobile {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      z-index: 50;
+   }
+
+   .result-actions-mobile .flex-row {
+      gap: 0.5rem;
+   }
+
+   .result-card-mobile {
+      padding: 2rem 1rem !important;
+   }
+
+   .result-actions-desktop {
+      display: none !important;
+   }
+
+   .edit-save-mobile {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      z-index: 50;
+   }
+
+   .edit-save-desktop {
+      display: none !important;
+   }
+}
+
+@media (min-width: 641px) {
+   .mobile-action-buttons {
+      display: none !important;
+   }
+
+   .game-header-mobile {
+      position: static;
+      padding: 0;
+   }
+
+   .game-content-mobile {
+      padding-top: 0;
+      padding-bottom: 0;
+      min-height: auto;
+   }
+
+   .game-actions-mobile {
+      position: static;
+      padding: 0;
+      margin-top: 1.5rem;
+   }
+
+   .result-content-mobile {
+      padding-top: 0;
+      padding-bottom: 0;
+      min-height: auto;
+   }
+
+   .result-actions-mobile {
+      display: none !important;
+   }
+
+   .result-actions-desktop {
+      display: flex !important;
+   }
+
+   .edit-save-mobile {
+      display: none !important;
+   }
+
+   .edit-save-desktop {
+      display: block !important;
+   }
+}
