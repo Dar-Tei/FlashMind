@@ -1,0 +1,382 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+   min-height: 100vh;
+}
+
+.gradient-bg-purple {
+   background: linear-gradient(to bottom right, #a855f7, #ec4899, #ef4444);
+}
+
+.gradient-bg-blue {
+   background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+}
+
+.gradient-bg-green {
+   background: linear-gradient(to bottom right, #10b981, #14b8a6);
+}
+
+.gradient-bg-indigo {
+   background: linear-gradient(to bottom right, #6366f1, #9333ea);
+}
+
+.container {
+   max-width: 1024px;
+   margin: 0 auto;
+   padding: 1.5rem;
+}
+
+.container-small {
+   max-width: 768px;
+}
+
+.header {
+   text-align: center;
+   margin-bottom: 2rem;
+}
+
+.title {
+   font-size: 3rem;
+   font-weight: bold;
+   color: white;
+   margin-bottom: 0.5rem;
+}
+
+.subtitle {
+   color: rgba(255, 255, 255, 0.9);
+   font-size: 1.125rem;
+}
+
+.btn {
+   padding: 1rem 1.5rem;
+   border: none;
+   border-radius: 0.75rem;
+   font-size: 1rem;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.3s;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.5rem;
+}
+
+.btn-primary {
+   background: white;
+   color: #9333ea;
+   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+   opacity: 0.9;
+}
+
+.btn-gradient {
+   background: linear-gradient(to right, #9333ea, #ec4899);
+   color: white;
+}
+
+.btn-gradient:hover {
+   opacity: 0.9;
+}
+
+.btn-secondary {
+   background: #4b5563;
+   color: white;
+}
+
+.btn-secondary:hover {
+   background: #374151;
+}
+
+.btn-green {
+   background: #10b981;
+   color: white;
+   font-size: 1.25rem;
+   padding: 1.25rem;
+}
+
+.btn-green:hover {
+   background: #059669;
+}
+
+.btn-red {
+   background: #ef4444;
+   color: white;
+   font-size: 1.25rem;
+   padding: 1.25rem;
+}
+
+.btn-red:hover {
+   background: #dc2626;
+}
+
+.btn-icon {
+   background: none;
+   border: none;
+   padding: 0.5rem;
+   cursor: pointer;
+   border-radius: 0.5rem;
+   transition: all 0.3s;
+}
+
+.btn-icon.blue {
+   color: #2563eb;
+}
+
+.btn-icon.blue:hover {
+   background: #eff6ff;
+}
+
+.btn-icon.red {
+   color: #dc2626;
+}
+
+.btn-icon.red:hover {
+   background: #fef2f2;
+}
+
+.card {
+   background: white;
+   border-radius: 0.75rem;
+   padding: 1.5rem;
+   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+   margin-bottom: 1rem;
+}
+
+.card-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   margin-bottom: 1rem;
+}
+
+.card-title {
+   font-size: 1.5rem;
+   font-weight: bold;
+   color: #1f2937;
+   margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+   color: #6b7280;
+}
+
+.card-score {
+   color: #10b981;
+   font-size: 0.875rem;
+   margin-top: 0.25rem;
+}
+
+.input {
+   width: 100%;
+   padding: 0.75rem 1rem;
+   border: 2px solid #d1d5db;
+   border-radius: 0.5rem;
+   font-size: 1rem;
+   transition: border-color 0.3s;
+}
+
+.input:focus {
+   outline: none;
+   border-color: #9333ea;
+}
+
+.input-lg {
+   font-size: 1.125rem;
+   padding: 0.875rem 1rem;
+}
+
+.back-btn {
+   color: white;
+   background: none;
+   border: none;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   font-size: 1rem;
+   margin-bottom: 1.5rem;
+   transition: opacity 0.3s;
+}
+
+.back-btn:hover {
+   opacity: 0.8;
+}
+
+.card-edit-item {
+   border: 2px solid #e5e7eb;
+   border-radius: 0.5rem;
+   padding: 1rem;
+   margin-bottom: 1rem;
+}
+
+.card-edit-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 0.75rem;
+}
+
+.card-edit-title {
+   font-weight: 600;
+   color: #374151;
+}
+
+.add-card-btn {
+   width: 100%;
+   padding: 0.75rem;
+   border: 2px dashed #d1d5db;
+   background: none;
+   border-radius: 0.5rem;
+   color: #6b7280;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.5rem;
+   margin-top: 1rem;
+   transition: all 0.3s;
+}
+
+.add-card-btn:hover {
+   border-color: #9333ea;
+   color: #9333ea;
+}
+
+.progress-bar {
+   width: 100%;
+   height: 0.5rem;
+   background: rgba(255, 255, 255, 0.3);
+   border-radius: 9999px;
+   overflow: hidden;
+   margin-bottom: 1.5rem;
+}
+
+.progress-fill {
+   height: 100%;
+   background: white;
+   border-radius: 9999px;
+   transition: width 0.3s;
+}
+
+.game-card {
+   background: white;
+   border-radius: 0.75rem;
+   padding: 2rem;
+   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+   min-height: 320px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+
+.game-question-label {
+   font-size: 0.875rem;
+   color: #6b7280;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   margin-bottom: 0.5rem;
+}
+
+.game-question {
+   font-size: 2.25rem;
+   font-weight: bold;
+   color: #1f2937;
+   text-align: center;
+}
+
+.game-answer {
+   font-size: 2.25rem;
+   font-weight: bold;
+   color: #10b981;
+   text-align: center;
+}
+
+.game-nav {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   color: white;
+   margin-bottom: 1rem;
+}
+
+.result-score {
+   font-size: 3.75rem;
+   font-weight: bold;
+   color: #10b981;
+   text-align: center;
+   margin-bottom: 0.5rem;
+}
+
+.result-bar {
+   width: 100%;
+   height: 1.5rem;
+   background: #e5e7eb;
+   border-radius: 9999px;
+   overflow: hidden;
+   margin-bottom: 1.5rem;
+}
+
+.result-bar-fill {
+   height: 100%;
+   background: linear-gradient(to right, #10b981, #14b8a6);
+   border-radius: 9999px;
+   transition: width 1s;
+}
+
+.improvement {
+   text-align: center;
+   margin-bottom: 1.5rem;
+}
+
+.improvement-positive {
+   color: #10b981;
+   font-weight: 600;
+}
+
+.improvement-negative {
+   color: #f97316;
+   font-weight: 600;
+}
+
+.improvement-same {
+   color: #6b7280;
+   font-weight: 600;
+}
+
+.empty-state {
+   text-align: center;
+   color: white;
+   margin-top: 3rem;
+}
+
+.flex-row {
+   display: flex;
+   gap: 1rem;
+}
+
+.flex-1 {
+   flex: 1;
+}
+
+.hidden {
+   display: none;
+}
+
+.icon {
+   width: 20px;
+   height: 20px;
+   display: inline-block;
+}
+
+.icon-lg {
+   width: 24px;
+   height: 24px;
+}
