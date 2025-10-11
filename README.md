@@ -20,7 +20,7 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
-###2. Serve files locally
+### 2. Serve files locally
 Using Python (default on most systems):
 ```
 python -m http.server 8000
