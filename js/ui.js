@@ -8,7 +8,8 @@ const icons = {
     arrowLeft: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
     rotateCw: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>',
     upload: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',
-    download: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
+    download: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+    sparkles: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>'
 };
 
 export class UIRenderer {
@@ -57,14 +58,18 @@ export class UIRenderer {
                     <p class="subtitle">Навчайся з картками легко та ефективно</p>
                 </div>
 
-                <div class="desktop-action-buttons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="create">
+                <div class="desktop-action-buttons" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="create">
                         ${icons.plus}
-                        Створити новий набір
+                        <span class="btn-text-mobile">Створити новий набір</span>
                     </button>
-                    <button class="btn btn-primary" style="flex: 1; font-size: 1.125rem;" data-action="import">
+                    <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="generate">
+                        ${icons.sparkles}
+                        <span class="btn-text-mobile">Згенерувати картки</span>
+                    </button>
+                    <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="import">
                         ${icons.download}
-                        Імпортувати у форматі json
+                        <span class="btn-text-mobile">Імпортувати у .json</span>
                     </button>
                 </div>
 
@@ -80,9 +85,12 @@ export class UIRenderer {
                 ` : ''}
             </div>
 
-            <div class="mobile-action-buttons">
+            <div class="mobile-action-buttons" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
                 <button class="btn btn-primary" data-action="create">
                     ${icons.plus}
+                </button>
+                <button class="btn btn-primary" data-action="generate">
+                    ${icons.sparkles}
                 </button>
                 <button class="btn btn-primary" data-action="import">
                     ${icons.download}
@@ -284,5 +292,122 @@ export class UIRenderer {
             </div>
         </div>
     `;
+    }
+    // Render AI generation modal (called separately)
+    renderGenerateModal() {
+        const modalHTML = `
+        <div class="modal-overlay" id="generate-modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <div class="modal-icon info">
+                        ${icons.sparkles}
+                    </div>
+                    <h3 class="modal-title">Генерація карток з AI</h3>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                            Тема карток
+                        </label>
+                        <input 
+                            type="text" 
+                            id="generate-topic" 
+                            class="input" 
+                            placeholder="Наприклад: Столиці Європи, Англійські дієслова..."
+                            style="margin-bottom: 0;"
+                        >
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                            Кількість карток
+                        </label>
+                        <select id="generate-count" class="input" style="margin-bottom: 0;">
+                            <option value="5">5 карток</option>
+                            <option value="10" selected>10 карток</option>
+                            <option value="15">15 карток</option>
+                            <option value="20">20 карток</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                            Рівень складності
+                        </label>
+                        <select id="generate-level" class="input" style="margin-bottom: 0;">
+                            <option value="початковий">Початковий</option>
+                            <option value="середній" selected>Середній</option>
+                            <option value="складний">Складний</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                                Мова питань
+                            </label>
+                            <select id="generate-question-lang" class="input" style="margin-bottom: 0;">
+                                <option value="українська" selected>Українська</option>
+                                <option value="англійська">Англійська</option>
+                                <option value="німецька">Німецька</option>
+                                <option value="французька">Французька</option>
+                                <option value="іспанська">Іспанська</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                                Мова відповідей
+                            </label>
+                            <select id="generate-answer-lang" class="input" style="margin-bottom: 0;">
+                                <option value="українська" selected>Українська</option>
+                                <option value="англійська">Англійська</option>
+                                <option value="німецька">Німецька</option>
+                                <option value="французька">Французька</option>
+                                <option value="іспанська">Іспанська</option>
+                            </select>
+                        </div>
+                    </div>               
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="generate-cancel">
+                        Скасувати
+                    </button>
+                    <button class="btn btn-gradient" id="generate-submit">
+                        ${icons.sparkles}
+                        Згенерувати
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+        return modalHTML;
+    }
+
+    // Render loading modal
+    renderLoadingModal(message = 'Генерую картки...') {
+        const modalHTML = `
+        <div class="modal-overlay" id="loading-modal">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div style="margin: 2rem 0;">
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 1.5rem; font-size: 1.125rem; font-weight: 600; color: #374151;">
+                        ${message}
+                    </p>
+                    <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">
+                        Це може зайняти кілька секунд...
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    // Remove loading modal
+    removeLoadingModal() {
+        const modal = document.getElementById('loading-modal');
+        if (modal) modal.remove();
     }
 }
