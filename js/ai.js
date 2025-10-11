@@ -34,7 +34,7 @@ export class AIGenerator {
 
        try {
            // Використовуємо Workers CORS Proxy
-           const response = await fetch('https://api.codetabs.com/v1/proxy?quest=' + 
+           const response = await fetch('https://delicate-bird-b11f.alexeyz55555.workers.dev/?quest=' + 
                encodeURIComponent(`https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`), {
                method: 'POST',
                headers: {
@@ -147,5 +147,4 @@ export class AIGenerator {
            };
        }
    }
-
 }
