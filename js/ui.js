@@ -61,15 +61,15 @@ export class UIRenderer {
                 <div class="desktop-action-buttons" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                     <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="create">
                         ${icons.plus}
-                        <span class="btn-text-mobile">Створити новий набір</span>
+                        <span class="btn-text-mobile">Створити</span>
                     </button>
                     <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="generate">
                         ${icons.sparkles}
-                        <span class="btn-text-mobile">Згенерувати картки</span>
+                        <span class="btn-text-mobile">Згенерувати</span>
                     </button>
                     <button class="btn btn-primary" style="font-size: 1.125rem;" data-action="import">
                         ${icons.download}
-                        <span class="btn-text-mobile">Імпортувати у .json</span>
+                        <span class="btn-text-mobile">Імпортувати</span>
                     </button>
                 </div>
 
@@ -411,3 +411,4 @@ export class UIRenderer {
         if (modal) modal.remove();
     }
 }
+
