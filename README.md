@@ -1,118 +1,115 @@
 # FlashMind
 
-Веб-додаток для створення та навчання з флеш-картками (українською).
+Web application for creating and learning with flashcards.
 
-## Основні функції
-- Створення та редагування наборів карток
-- Імпорт/експорт JSON наборів
-- Drag & Drop імпорт файлів
-- Генерація карток через AI (Gemini API)
-- Режим гри з підрахунком результатів
-- Кастомні UI компоненти (dropdown, modals)
+## Key Features
+- ✨ Create and edit card sets
+- 📤 Import/export JSON sets
+- 🎯 Drag & Drop file import
+- 🤖 Card generation using AI (Gemini API)
+- 🎮 Learning mode with score tracking
+- 🎨 Custom UI components (dropdown, modals)
 
-## Швидкий старт
+## Quick Start
 
-### Локальний запуск
+### Local Setup
 ```powershell
 # Python
 python -m http.server 8000
 
-# або Node.js
+# or Node.js
 npx http-server . -p 8000
 ```
 
-Відкрийте http://localhost:8000 у браузері
+Open http://localhost:8000 in your browser
 
-## Структура проекту
+## Project Structure
 
 ```
 FlashMind/
-├── index.html          # Точка входу
+├── index.html          # Entry point
 ├── css/
-│   └── style.css      # Стилі
+│   └── style.css      # Styles
 ├── js/
-│   ├── main.js        # Головний модуль
-│   ├── logic.js       # Бізнес-логіка
-│   ├── ui.js          # Рендеринг UI
+│   ├── main.js        # Main module
+│   ├── logic.js       # Business logic
+│   ├── ui.js          # UI rendering
 │   ├── storage.js     # LocalStorage + Import/Export
-│   ├── dragdrop.js    # Drag & Drop обробник
-│   ├── ai.js          # AI генерація (Gemini)
-│   ├── modal.js       # Модальні вікна 
-│   ├── dropdown.js    # Кастомний dropdown
-│   └── helpers.js     # Допоміжні функції
-└── Міста_України.json # Приклад набору
+│   ├── dragdrop.js    # Drag & Drop handler
+│   ├── ai.js          # AI generation (Gemini)
+│   ├── modal.js       # Modal windows
+│   ├── dropdown.js    # Custom dropdown
+│   └── helpers.js     # Helper functions
+└── Cities_Ukraine.json # Example set
 ```
 
-## Розробка
+## Development
 
-### Основні модулі
-- **FlashMindLogic** (`logic.js`) - бізнес-логіка
-- **UIRenderer** (`ui.js`) - рендеринг інтерфейсу  
-- **StorageManager** (`storage.js`) - робота з localStorage
-- **DragDropManager** (`dragdrop.js`) - Drag & Drop імпорт
-- **AIGenerator** (`ai.js`) - генерація через Gemini API
-- **ModalManager** (`modal.js`) - модальні вікна
-- **CustomDropdown** (`dropdown.js`) - кастомний dropdown
+### Core Modules
+- **FlashMindLogic** (`logic.js`) - business logic
+- **UIRenderer** (`ui.js`) - interface rendering
+- **StorageManager** (`storage.js`) - localStorage operations
+- **DragDropManager** (`dragdrop.js`) - Drag & Drop import
+- **AIGenerator** (`ai.js`) - generation via Gemini API
+- **ModalManager** (`modal.js`) - modal windows
+- **CustomDropdown** (`dropdown.js`) - custom dropdown
 
-### JSON формат для імпорту/експорту
+### JSON Import/Export Format
 
 ```json
 {
-  "name": "Назва набору",
+  "name": "Set Name",
   "cards": [
     {
-      "question": "Питання 1",
-      "answer": "Відповідь 1"
+      "question": "Question 1",
+      "answer": "Answer 1"
     },
     {
-      "question": "Питання 2", 
-      "answer": "Відповідь 2"
+      "question": "Question 2",
+      "answer": "Answer 2" 
     }
   ]
 }
 ```
 
-### AI генерація
+### AI Generation
 
-1. Встановіть API ключ:
+1. Set up API key:
 ```javascript
 const ai = new AIGenerator();
 ai.setApiKey('your-api-key');
 ```
 
-2. Згенеруйте картки:
+2. Generate cards:
 ```javascript
 const options = {
-  topic: "Тема",
+  topic: "Topic",
   count: 10,
-  level: "середній",
-  questionLang: "українська",
-  answerLang: "українська"
+  level: "medium",
+  questionLang: "english",
+  answerLang: "english"
 };
 
 const cards = await ai.generateCards(options);
 ```
 
-### Drag & Drop імпорт
+### Drag & Drop Import
 
 ```javascript
 const dragDrop = new DragDropManager('#dropzone', (result) => {
   if (result.success) {
-    console.log('Імпортовано:', result.data);
+    console.log('Imported:', result.data);
   } else {
-    console.error('Помилка:', result.error);
+    console.error('Error:', result.error);
   }
 });
 ```
 
-## Внесок
+## Contributing
 
-1. Fork репозиторій
-2. Створіть feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit зміни (`git commit -m 'Add some AmazingFeature'`)
-4. Push у branch (`git push origin feature/AmazingFeature`)
-5. Відкрийте Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Ліцензія
-
-[MIT](LICENSE)
