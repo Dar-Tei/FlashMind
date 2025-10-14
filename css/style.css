@@ -7,6 +7,15 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+.gradient-bg-purple,
+.gradient-bg-blue,
+.gradient-bg-green,
+.gradient-bg-indigo {
+   min-height: 100vh;
+   min-height: -webkit-fill-available;
 }
 
 .gradient-bg-purple {
@@ -555,10 +564,14 @@ body {
   .container {
     padding: 1rem;
     padding-bottom: 6rem;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 
   .container-small {
     padding-bottom: 6rem;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 
   .title {
@@ -599,7 +612,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    margin: 15px;
+    margin: 16px;
     padding: 1rem;
     display: flex;
     gap: 1rem;
