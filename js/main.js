@@ -68,11 +68,31 @@ class FlashMind {
   attachEventListeners() {
     document.querySelectorAll("[data-action]").forEach((el) => {
       if (el.getAttribute("data-action") === "search") {
+        // Store selection start and end before render
         el.addEventListener("input", (e) => {
+          const input = e.target;
+          const selectionStart = input.selectionStart;
+          const selectionEnd = input.selectionEnd;
+
           clearTimeout(this.searchTimeout);
           this.searchTimeout = setTimeout(() => {
-            this.searchQuery = e.target.value;
+            this.searchQuery = input.value;
+
+            // Store active element state
+            const wasSearchFocused = document.activeElement === input;
+
             this.render();
+
+            // Restore focus and selection if search was focused
+            if (wasSearchFocused) {
+              const searchInput = document.querySelector(
+                "[data-action='search']"
+              );
+              if (searchInput) {
+                searchInput.focus();
+                searchInput.setSelectionRange(selectionStart, selectionEnd);
+              }
+            }
           }, 300);
         });
       } else if (el.getAttribute("data-action") === "sort") {

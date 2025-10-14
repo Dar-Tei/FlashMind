@@ -125,6 +125,8 @@ export class UIRenderer {
                                 placeholder="Пошук за назвою або вмістом карток..." 
                                 value="${searchQuery}"
                                 data-action="search"
+                                id="search-input"
+                                autocomplete="off"
                             >
                             ${
                               searchQuery
@@ -200,6 +202,16 @@ export class UIRenderer {
             </div>
         </div>
     `;
+    // Restore focus after rendering
+    if (document.activeElement?.classList.contains("search-input")) {
+      const searchInput = document.getElementById("search-input");
+      if (searchInput) {
+        searchInput.focus();
+        // Restore cursor position to end of text
+        const len = searchInput.value.length;
+        searchInput.setSelectionRange(len, len);
+      }
+    }
   }
 
   formatLastPlayed(timestamp) {
