@@ -88,6 +88,7 @@ body {
 .btn-secondary {
    background: #4b5563;
    color: white;
+   padding: 1.5rem;
 }
 
 .btn-secondary:hover {

@@ -19,6 +19,9 @@ const icons = {
   search:
     '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
   x: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+  check: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+  xCircle: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+  arrowRight: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
 };
 
 export class UIRenderer {
@@ -372,16 +375,19 @@ export class UIRenderer {
                         ? `
                         <div class="flex-row" style="width: 100%;">
                             <button class="btn btn-green flex-1" data-action="know">
-                                ✓ Знаю
+                                ${icons.check}
+                                Знаю
                             </button>
                             <button class="btn btn-red flex-1" data-action="dont-know">
-                                ✗ Не знаю
+                                ${icons.xCircle}
+                                Не знаю
                             </button>
                         </div>
                         `
                         : `
                         <button class="btn btn-gradient" style="width: 100%; font-size: 1.25rem; padding: 1.25rem;" data-action="next">
-                            Далі →
+                            Далі
+                            ${icons.arrowRight}
                         </button>
                         `
                     }
