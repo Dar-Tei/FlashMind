@@ -8,7 +8,7 @@ import { AIGenerator } from "./ai.js";
 import { initCustomDropdowns } from "./dropdown.js";
 import { DragDropManager } from "./dragdrop.js";
 import { MessageHelper } from "./helpers.js"; 
-import './viewport-fix.js';
+
 
 class FlashMind {
   constructor() {
