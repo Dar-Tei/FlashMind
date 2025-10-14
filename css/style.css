@@ -605,7 +605,7 @@ body {
       gap: 1rem;
       z-index: 50;
       background: rgb(152 54 228 / 34%);
-      border-radius: 15px;
+      border-radius: 16px;
     }
 
    .mobile-action-buttons .btn {
