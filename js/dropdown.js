@@ -6,6 +6,7 @@ export class CustomDropdown {
     this.customDropdown = null;
     this.isOpen = false;
     this.selectedIndex = selectElement.selectedIndex;
+    this.id = selectElement.id;
 
     this.init();
   }
@@ -36,6 +37,11 @@ export class CustomDropdown {
     selected.className = "custom-dropdown-selected";
 
     const selectedText = document.createElement("span");
+    if (this.id === "main-sort") {
+      selected.className = "custom-dropdown-selected main-sort-dropdown";
+    } else {
+      selected.className = "custom-dropdown-selected";
+    }
     selectedText.className = "custom-dropdown-text";
     selectedText.textContent =
       this.selectElement.options[this.selectedIndex].text;
@@ -216,21 +222,21 @@ export class CustomDropdown {
 
 // Auto-initialize all selects with class 'custom-select'
 export function initCustomDropdowns(container = document) {
-    // Remove old dropdowns in the container
-    container.querySelectorAll('.custom-dropdown').forEach(dropdown => {
-        dropdown.remove();
-    });
-    
-    // Initialize all selects in the container
-    const selects = container.querySelectorAll('select.input');
-    const dropdowns = [];
-    
-    selects.forEach(select => {
-        // Remove initialized flag if it exists
-        select.removeAttribute('data-dropdown-initialized');
-        // Create new dropdown
-        dropdowns.push(new CustomDropdown(select));
-    });
-    
-    return dropdowns;
+  // Remove old dropdowns in the container
+  container.querySelectorAll(".custom-dropdown").forEach((dropdown) => {
+    dropdown.remove();
+  });
+
+  // Initialize all selects in the container
+  const selects = container.querySelectorAll("select.input");
+  const dropdowns = [];
+
+  selects.forEach((select) => {
+    // Remove initialized flag if it exists
+    select.removeAttribute("data-dropdown-initialized");
+    // Create new dropdown
+    dropdowns.push(new CustomDropdown(select));
+  });
+
+  return dropdowns;
 }

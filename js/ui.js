@@ -140,7 +140,7 @@ export class UIRenderer {
                         </div>
                     </div>
                     <div class="sort-box">
-                        <select class="input sort-select" data-action="sort" style="margin-bottom: 0;">
+                        <select class="input sort-select" id="main-sort" data-action="sort" style="margin-bottom: 0;">
                             <option value="newest" ${
                               sortBy === "newest" ? "selected" : ""
                             }>Найновіші</option>

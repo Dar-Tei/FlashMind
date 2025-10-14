@@ -20,7 +20,7 @@ class FlashMind {
 
     this.currentView = "home";
     this.searchQuery = "";
-    this.sortBy = "newest";
+    this.sortBy = "recent";
     this.searchTimeout = null;
 
     this.init();
