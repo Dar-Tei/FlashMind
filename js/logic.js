@@ -123,9 +123,16 @@ export class FlashMindLogic {
     const set = {
       id: Date.now(),
       name: "",
-      cards: [],
+      cards: [
+        {
+          // Add default empty card
+          id: Date.now(),
+          question: "",
+          answer: "",
+        },
+      ],
       lastScore: null,
-      lastPlayedAt: null, // Add lastPlayedAt field
+      lastPlayedAt: null,
     };
     this.editingSet = set;
     return set;
@@ -163,10 +170,13 @@ export class FlashMindLogic {
 
   // Add card
   addCard() {
-    if (!this.editingSet) return null;
-    const newCard = { id: Date.now(), question: "", answer: "" };
-    this.editingSet.cards.push(newCard);
-    return this.editingSet;
+    if (this.editingSet) {
+      this.editingSet.cards.push({
+        id: Date.now(),
+        question: "",
+        answer: "",
+      });
+    }
   }
 
   // Update card
@@ -181,50 +191,63 @@ export class FlashMindLogic {
 
   // Delete card
   deleteCard(cardId) {
-    if (!this.editingSet || this.editingSet.cards.length <= 1) return null;
-    this.editingSet.cards = this.editingSet.cards.filter(
-      (c) => c.id !== cardId
-    );
-    return this.editingSet;
+    if (this.editingSet) {
+      // Don't delete if it's the last card
+      if (this.editingSet.cards.length <= 1) {
+        return;
+      }
+      this.editingSet.cards = this.editingSet.cards.filter(
+        (card) => card.id !== cardId
+      );
+    }
   }
 
   // Update set name
   updateSetName(name) {
-    if (!this.editingSet) return null;
-    this.editingSet.name = name;
-    return this.editingSet;
+    if (this.editingSet) {
+      this.editingSet.name = name;
+    }
   }
 
   // Save set
   saveSet() {
-    if (!this.editingSet)
-      return { success: false, error: "Немає набору для збереження" };
+    if (!this.editingSet) {
+      return { success: false, error: "Набір не знайдено" };
+    }
 
+    // Validate set name
     if (!this.editingSet.name.trim()) {
-      return { success: false, error: "Відсутня назва набору" };
+      return { success: false, error: "Введіть назву набору" };
     }
 
+    // Filter out completely empty cards
     const validCards = this.editingSet.cards.filter(
-      (c) => c.question.trim() && c.answer.trim()
+      (card) => card.question.trim() || card.answer.trim()
     );
+
+    // Ensure at least one valid card
     if (validCards.length === 0) {
-      return { success: false, error: "У набор не додано картки" };
+      return { success: false, error: "Додайте хоча б одну картку" };
     }
 
-    const newSet = { ...this.editingSet, cards: validCards };
+    // Update cards and save
+    this.editingSet.cards = validCards;
 
-    if (this.editingSet.id) {
-      this.sets = this.sets.map((s) =>
-        s.id === this.editingSet.id ? newSet : s
-      );
+    // Add or update set in collection
+    const existingIndex = this.sets.findIndex(
+      (s) => s.id === this.editingSet.id
+    );
+    if (existingIndex !== -1) {
+      this.sets[existingIndex] = { ...this.editingSet };
     } else {
-      newSet.id = Date.now();
-      newSet.lastScore = null;
-      this.sets.push(newSet);
+      this.sets.push({ ...this.editingSet });
     }
 
-    this.editingSet = null;
-    return { success: true, sets: this.sets };
+    return {
+      success: true,
+      sets: this.sets,
+      set: this.editingSet,
+    };
   }
 
   // Add imported set

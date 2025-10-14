@@ -408,7 +408,7 @@ class FlashMind {
         await this.modal.alert({
           title: title,
           message: help,
-          type: "error",
+          type: "warning",
           buttonText: "Зрозуміло",
         });
       }
