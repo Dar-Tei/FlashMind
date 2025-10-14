@@ -7,8 +7,7 @@ import { ModalManager } from "./modal.js";
 import { AIGenerator } from "./ai.js";
 import { initCustomDropdowns } from "./dropdown.js";
 import { DragDropManager } from "./dragdrop.js";
-import { MessageHelper } from "./helpers.js"; 
-
+import { MessageHelper } from "./helpers.js";
 
 class FlashMind {
   constructor() {
@@ -20,6 +19,9 @@ class FlashMind {
     this.dragDrop = null;
 
     this.currentView = "home";
+    this.searchQuery = "";
+    this.sortBy = "newest";
+    this.searchTimeout = null;
 
     this.init();
   }
@@ -35,8 +37,12 @@ class FlashMind {
   // Render current view
   render() {
     if (this.currentView === "home") {
-      const sets = this.logic.getAllSets();
-      this.ui.renderHome(sets);
+      const allSets = this.logic.getAllSets();
+      const filteredSets = this.logic.filterAndSortSets(
+        this.searchQuery,
+        this.sortBy
+      );
+      this.ui.renderHome(filteredSets, this.searchQuery, this.sortBy);
       this.initDragDrop();
     } else if (this.currentView === "edit") {
       const editingSet = this.logic.getEditingSet();
@@ -51,20 +57,44 @@ class FlashMind {
 
     this.attachEventListeners();
     setTimeout(() => {
-      initCustomDropdowns();
+      const mainContent = document.querySelector(".container");
+      if (mainContent) {
+        initCustomDropdowns(mainContent);
+      }
     }, 0);
   }
 
   // Attach event listeners
   attachEventListeners() {
     document.querySelectorAll("[data-action]").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        const action = e.currentTarget.getAttribute("data-action");
-        const id = e.currentTarget.getAttribute("data-id");
-        this.handleAction(action, id);
-      });
+      if (el.getAttribute("data-action") === "search") {
+        el.addEventListener("input", (e) => {
+          clearTimeout(this.searchTimeout);
+          this.searchTimeout = setTimeout(() => {
+            this.searchQuery = e.target.value;
+            this.render();
+          }, 300);
+        });
+      } else if (el.getAttribute("data-action") === "sort") {
+        el.addEventListener("change", (e) => {
+          this.sortBy = e.target.value;
+          this.render();
+        });
+      } else if (el.getAttribute("data-action") === "clear-search") {
+        el.addEventListener("click", (e) => {
+          this.searchQuery = "";
+          this.render();
+        });
+      } else {
+        el.addEventListener("click", (e) => {
+          const action = e.currentTarget.getAttribute("data-action");
+          const id = e.currentTarget.getAttribute("data-id");
+          this.handleAction(action, id);
+        });
+      }
     });
 
+    // Existing field listeners
     document.querySelectorAll('[data-field="set-name"]').forEach((el) => {
       el.addEventListener("input", (e) => {
         this.logic.updateSetName(e.target.value);
@@ -78,6 +108,14 @@ class FlashMind {
         this.logic.updateCard(cardId, field, e.target.value);
       });
     });
+  }
+
+  // Reset search and sort when going back
+  goBack() {
+    this.searchQuery = "";
+    this.sortBy = "newest";
+    this.currentView = "home";
+    this.render();
   }
 
   // Handle actions
@@ -142,48 +180,39 @@ class FlashMind {
   }
 
   async showGenerateModal() {
-    const modalHTML = this.ui.renderGenerateModal();
-    document.body.insertAdjacentHTML("beforeend", modalHTML);
+    // First render the modal
+    const modal = this.ui.renderGenerateModal();
 
-    const modal = document.getElementById("generate-modal");
+    // Get form elements
     const topicInput = document.getElementById("generate-topic");
-    const countSelect = document.getElementById("generate-count");
-    const levelSelect = document.getElementById("generate-level");
-    const questionLangSelect = document.getElementById("generate-question-lang");
-    const answerLangSelect = document.getElementById("generate-answer-lang");
+    const countSelect = document.querySelector("#generate-count");
+    const levelSelect = document.querySelector("#generate-level");
+    const questionLangSelect = document.querySelector(
+      "#generate-question-lang"
+    );
+    const answerLangSelect = document.querySelector("#generate-answer-lang");
     const cancelBtn = document.getElementById("generate-cancel");
     const submitBtn = document.getElementById("generate-submit");
 
-    setTimeout(() => {
-      initCustomDropdowns();
-    }, 0);
+    // Initialize custom dropdowns after modal is rendered
+    const dropdowns = initCustomDropdowns(modal);
 
+    // Setup event listeners
     cancelBtn.addEventListener("click", () => {
       modal.remove();
     });
 
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.remove();
-      }
-    });
-
-    const escHandler = (e) => {
-      if (e.key === "Escape") {
-        modal.remove();
-        document.removeEventListener("keydown", escHandler);
-      }
-    };
-    document.addEventListener("keydown", escHandler);
-
     submitBtn.addEventListener("click", async () => {
-      const topic = topicInput.value.trim();
-      const count = parseInt(countSelect.value);
-      const level = levelSelect.value;
-      const questionLang = questionLangSelect.value;
-      const answerLang = answerLangSelect.value;
+      const options = {
+        topic: topicInput.value.trim(),
+        count: parseInt(countSelect.value),
+        level: levelSelect.value,
+        questionLang: questionLangSelect.value,
+        answerLang: answerLangSelect.value,
+      };
 
-      if (!topic) {
+      if (!options.topic) {
+        // Show error for empty topic
         await this.modal.alert({
           title: "Щось не так",
           message: "Введіть тему для генерації карток",
@@ -192,18 +221,26 @@ class FlashMind {
         return;
       }
 
+      // Remove generation modal
       modal.remove();
 
-      await this.generateCardsWithAI({
-        topic,
-        count,
-        level,
-        questionLang,
-        answerLang,
-      });
-    });
+      // Show loading state
+      const loadingModal = this.ui.renderLoadingModal();
 
-    topicInput.focus();
+      try {
+        const cards = await this.generateCardsWithAI(options);
+        // Don't remove loading modal here - it's handled in generateCardsWithAI
+
+        if (cards) {
+          // Create new set with generated cards
+          const newSet = this.logic.createNewSetWithCards(options.topic, cards);
+          this.render();
+        }
+      } catch (error) {
+        this.ui.removeLoadingModal();
+        // Show error modal through generateCardsWithAI
+      }
+    });
   }
 
   // Drag & Drop
@@ -227,7 +264,9 @@ class FlashMind {
           type: "success",
         });
       } else {
-        const { title, help } = MessageHelper.getDragDropErrorHelp(result.error);
+        const { title, help } = MessageHelper.getDragDropErrorHelp(
+          result.error
+        );
 
         await this.modal.alert({
           title: title,
@@ -249,8 +288,7 @@ class FlashMind {
   async generateCardsWithAI(options) {
     const { topic, count, level, questionLang, answerLang } = options;
 
-    this.ui.renderLoadingModal(`Генерую ${count} карток на тему "${topic}"...`);
-
+    // Don't show loading modal here since it's already shown
     try {
       const result = await this.ai.generateCards({
         topic,
@@ -260,6 +298,7 @@ class FlashMind {
         answerLang,
       });
 
+      // Remove loading modal before showing result
       this.ui.removeLoadingModal();
 
       if (result.success) {
@@ -281,6 +320,7 @@ class FlashMind {
         });
       }
     } catch (error) {
+      // Remove loading modal before showing error
       this.ui.removeLoadingModal();
 
       const { title, help } = MessageHelper.getAIErrorHelp(error);
@@ -302,7 +342,8 @@ class FlashMind {
   async deleteSet(id) {
     const confirmed = await this.modal.confirm({
       title: "Видалення набору",
-      message: "Ви впевнені, що хочете видалити цей набір? Цю дію не можна скасувати.",
+      message:
+        "Ви впевнені, що хочете видалити цей набір? Цю дію не можна скасувати.",
       confirmText: "Видалити",
       cancelText: "Скасувати",
       type: "warning",
