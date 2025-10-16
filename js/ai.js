@@ -23,7 +23,7 @@ export class AIGenerator {
         const prompt = this.buildPrompt(topic, count, level, questionLang, answerLang);
  
         try {
-            // Використовуємо Workers CORS Proxy БЕЗ API ключа в URL
+            // We use Workers CORS Proxy WITHOUT an API key in the URL
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`;
             
             const response = await fetch('https://delicate-bird-b11f.alexeyz55555.workers.dev/?quest=' + 
