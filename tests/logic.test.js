@@ -159,7 +159,6 @@ describe('FlashMindLogic', () => {
       logic.addCard();
       logic.updateCard(logic.editingSet.cards[0].id, 'question', 'Q1');
       logic.updateCard(logic.editingSet.cards[0].id, 'answer', 'A1');
-      // Друга картка залишається порожньою
       const result = logic.saveSet();
       expect(result.success).toBe(true);
       expect(result.set.cards).toHaveLength(1);
