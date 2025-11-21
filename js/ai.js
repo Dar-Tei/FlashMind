@@ -2,7 +2,7 @@
 
 export class AIGenerator {
     constructor() {
-        this.model = 'gemini-1.5-flash';
+        this.model = 'gemini-2.0-flash-001';
     }
  
     // Set model
